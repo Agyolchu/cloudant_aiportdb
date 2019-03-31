@@ -1,0 +1,5 @@
+url:           'https://mikerhodes.cloudant.com'
+admin_party:   True
+connect:       True
+user:
+auth_token:
