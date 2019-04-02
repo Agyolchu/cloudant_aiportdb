@@ -24,7 +24,7 @@ class AirportDataProcessor(object):
 
         a = sin(lat_diff / 2) ** 2 + cos(lat1) * cos(lat2) * sin(lon_diff / 2) ** 2
 
-        return 2 * earth_radius * asin(sqrt(a))
+        return round(2 * earth_radius * asin(sqrt(a)), 2)
 
     def __distance_calculator(self, airport_details: dict) -> dict:
         lat1 = float(airport_details.get('lat'))
@@ -37,8 +37,7 @@ class AirportDataProcessor(object):
 
     def distance_processor(self) -> list:
         all_airports = []
-        if self.airport_data:
-            for airport_details in self.airport_data.values():
-                new_airport_details = self.__distance_calculator(airport_details)
-                all_airports.append(new_airport_details)
-            return all_airports
+        for airport_details in self.airport_data.values():
+            new_airport_details = self.__distance_calculator(airport_details)
+            all_airports.append(new_airport_details)
+        return all_airports

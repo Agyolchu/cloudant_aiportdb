@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %} Airport Data Enter Form {% endblock %}
+{% block head %}
+{{ super() }}
+{% endblock %}
+{% block body %}
+<form class="form-style-9" method="POST">
+<ul>
+<li>
+    <input type="number" min=0 name="provided_radius" class="field-style field-full align-none" placeholder="Search Radius">
+</li>
+<li>
+    <input type="number" min=0 name="user_lat" class="field-style field-full align-none" placeholder="User Latitude">
+</li>
+<li>
+    <input type="number" name="user_lon" class="field-style field-full align-none" placeholder="User Longitude">
+</li>
+<li>
+<input type="submit" value="Submit" />
+</li>
+</ul>
+</form>
+{% endblock %}
+
+

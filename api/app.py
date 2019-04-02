@@ -2,35 +2,31 @@ from cloudant_service import CloudantService
 from connection_config import connection_credentials
 from airport_data_processor import AirportDataProcessor
 from upper_bounds_finder import UpperBoundsFinder
-from flask import Flask, jsonify, request
-from flask_restful import Resource, Api
+from flask import Flask, render_template, request, redirect, url_for
 
-app = Flask(__name__)
-api = Api(app)
+app = Flask(__name__, static_url_path='/static')
 cloudant = CloudantService(**connection_credentials)
 
 
-class HomeAPI(Resource):
-    def get(self):
-        return "Hello Airport"
-
-
-class AirportAPI(Resource):
-
-    def get(self):
-        arguments = request.args.to_dict()
-        arguments = {k: float(v) for k, v in arguments.items()}
+@app.route('/', methods=['GET', 'POST'])
+def home():
+    if request.method == 'POST':
+        arguments = {}
+        form = request.form
+        required_parameters = ['provided_radius', 'user_lat', 'user_lon']
+        for k, v in form.items():
+            if k in required_parameters:
+                arguments[k] = float(v)
         upper_bounds = UpperBoundsFinder(arguments)
         maximum_distance_coordinates = upper_bounds.generate_border_coordinates()
         airport_data = cloudant.get_airport_data(maximum_distance_coordinates, arguments)
         airport_processor_details = AirportDataProcessor(airport_data, arguments)
         output_data = airport_processor_details.distance_processor()
-        data = {'result': output_data}
-        return jsonify(data)
+        return render_template('airports.html', items=output_data)
 
+    elif request.method == 'GET':
+        return render_template('index.html')
 
-api.add_resource(HomeAPI, '/')
-api.add_resource(AirportAPI, '/airport/')
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(port=1989, debug=True)
