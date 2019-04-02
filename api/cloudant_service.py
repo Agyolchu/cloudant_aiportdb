@@ -1,15 +1,12 @@
 from cloudant.client import CouchDB
 from cloudant.database import CloudantDatabase
-from cloudant.result import Result
-import json
 
 
 class CloudantService(object):
 
     def __init__(self, **connection_credentials):
         """
-        :param db_name:
-        :param kwargs:
+        :param connection_credentials: basic connection parameters, check connection_parameters.yml
         """
         self.db = self.__get_db(**connection_credentials)
 
@@ -22,30 +19,26 @@ class CloudantService(object):
 
     @staticmethod
     def __get_search_string(**kwargs):
-        return "lon:[{lon_dn} TO {lon_up}] AND lat:[{lat_dn} TO {lat_up}]".format(**kwargs)
+        return "lon:[{user_lon} TO {range_lon}] AND lat:[{user_lat} TO {range_lat}]".format(**kwargs)
 
-    def __get_data_ids(self, lat_up, lon_up, lat_dn, lon_dn):
+    def get_airport_data(self, airport_details: list, user_details: dict) -> dict:
         try:
-            ids = []
-            search_string = self.__get_search_string(lat_dn=lat_dn, lat_up=lat_up, lon_dn=lon_dn, lon_up=lon_up)
-            all_ids = self.db.get_search_result(ddoc_id='view1', index_name='geo', query=search_string)
-            for location_info in all_ids['rows']:
-                location_id = location_info.get('id')
-                ids.append(location_id)
-            # Can be written with yield more efficient for large data
-            return ids
+            user_lon = user_details.get('user_lon')
+            user_lat = user_details.get('user_lat')
+
+            all_airport_details = {}
+            for airport_cordinates in airport_details:
+                range_lon = airport_cordinates.get('range_lon')
+                range_lat = airport_cordinates.get('range_lat')
+
+                search_string = self.__get_search_string(range_lon=range_lon, range_lat=range_lat, user_lat=user_lat,
+                                                         user_lon=user_lon)
+                all_ids = self.db.get_search_result(ddoc_id='view1', index_name='geo', query=search_string)
+
+                for location_info in all_ids['rows']:
+                    fields = location_info.get('fields')
+                    if fields['name'] not in all_airport_details.keys():
+                        all_airport_details[fields['name']] = fields
+            return all_airport_details
         except Exception as e:
             print(e)
-
-    def get_airport_data(self, lat_up, lon_up, lat_dn, lon_dn):
-        _ids = self.__get_data_ids(lat_up, lon_up, lat_dn, lon_dn)
-        result_collection = self.db.all_docs(keys=_ids, include_docs=True)
-        output_list = []
-        for data in result_collection['rows']:
-            _airport_data = {
-                'airport_name': data['doc'].get('name'),
-                'country': data['doc'].get('country'),
-                'city': data['doc'].get('city')
-            }
-            output_list.append(_airport_data)
-        return output_list
