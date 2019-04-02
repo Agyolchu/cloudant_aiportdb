@@ -8,7 +8,7 @@ class AirportDataProcessor(object):
         self.user_details = user_details
 
     @staticmethod
-    def _haversing_formula(lon1: float, lat1: float, lon2: float, lat2: float) -> float:
+    def _haversine_formula(lon1: float, lat1: float, lon2: float, lat2: float) -> float:
         """
         Reference link: https://andrew.hedges.name/experiments/haversine/
         :param lon1: user longitude
@@ -31,14 +31,14 @@ class AirportDataProcessor(object):
         lon1 = float(airport_details.get('lon'))
         lat2 = float(self.user_details.get('user_lat'))
         lon2 = float(self.user_details.get('user_lon'))
-        distance = self._haversing_formula(lon1, lat1, lon2, lat2)
+        distance = self._haversine_formula(lon1, lat1, lon2, lat2)
 
         return {'airport_name': airport_details.get('name'), 'distance': distance}
 
     def distance_processor(self) -> list:
         all_airports = []
-
-        for airport_details in self.airport_data.values():
-            new_airport_details = self.__distance_calculator(airport_details)
-            all_airports.append(new_airport_details)
-        return all_airports
+        if self.airport_data:
+            for airport_details in self.airport_data.values():
+                new_airport_details = self.__distance_calculator(airport_details)
+                all_airports.append(new_airport_details)
+            return all_airports

@@ -16,12 +16,13 @@ class HomeAPI(Resource):
 
 
 class AirportAPI(Resource):
+
     def get(self):
         arguments = request.args.to_dict()
         arguments = {k: float(v) for k, v in arguments.items()}
         upper_bounds = UpperBoundsFinder(arguments)
-        maximum_distance_cordinates = upper_bounds.generate_border_cordinates()
-        airport_data = cloudant.get_airport_data(maximum_distance_cordinates, arguments)
+        maximum_distance_coordinates = upper_bounds.generate_border_coordinates()
+        airport_data = cloudant.get_airport_data(maximum_distance_coordinates, arguments)
         airport_processor_details = AirportDataProcessor(airport_data, arguments)
         output_data = airport_processor_details.distance_processor()
         data = {'result': output_data}

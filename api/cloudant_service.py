@@ -27,9 +27,9 @@ class CloudantService(object):
             user_lat = user_details.get('user_lat')
 
             all_airport_details = {}
-            for airport_cordinates in airport_details:
-                range_lon = airport_cordinates.get('range_lon')
-                range_lat = airport_cordinates.get('range_lat')
+            for airport_coordinates in airport_details:
+                range_lon = airport_coordinates.get('range_lon')
+                range_lat = airport_coordinates.get('range_lat')
 
                 search_string = self.__get_search_string(range_lon=range_lon, range_lat=range_lat, user_lat=user_lat,
                                                          user_lon=user_lon)
