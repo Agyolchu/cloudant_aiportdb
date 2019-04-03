@@ -6,15 +6,12 @@ from flask import Flask, render_template, request, redirect, url_for
 
 app = Flask(__name__, static_url_path='/static')
 cloudant = CloudantService(**connection_credentials)
-all_airports = cloudant.get_airport_data()
-
-
-# required_parameters = {'provided_radius': 20, 'user_lat': 50, 'user_lon': 30}
 
 
 @app.route('/', methods=['GET', 'POST'])
 def home():
     if request.method == 'POST':
+        all_airports = cloudant.get_airport_data()
         new_required_params = {}
         required_parameters = request.form.to_dict()
         for k, v in required_parameters.items():
