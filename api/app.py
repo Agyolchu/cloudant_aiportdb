@@ -1,28 +1,30 @@
 from cloudant_service import CloudantService
 from connection_config import connection_credentials
 from airport_data_processor import AirportDataProcessor
-from upper_bounds_finder import UpperBoundsFinder
+from nearest_airport_searcher import NearestAirportSearcher
 from flask import Flask, render_template, request, redirect, url_for
 
 app = Flask(__name__, static_url_path='/static')
 cloudant = CloudantService(**connection_credentials)
+all_airports = cloudant.get_airport_data()
+
+
+# required_parameters = {'provided_radius': 20, 'user_lat': 50, 'user_lon': 30}
 
 
 @app.route('/', methods=['GET', 'POST'])
 def home():
     if request.method == 'POST':
-        arguments = {}
-        form = request.form
-        required_parameters = ['provided_radius', 'user_lat', 'user_lon']
-        for k, v in form.items():
-            if k in required_parameters:
-                arguments[k] = float(v)
-        upper_bounds = UpperBoundsFinder(arguments)
-        maximum_distance_coordinates = upper_bounds.generate_border_coordinates()
-        airport_data = cloudant.get_airport_data(maximum_distance_coordinates, arguments)
-        airport_processor_details = AirportDataProcessor(airport_data, arguments)
-        output_data = airport_processor_details.distance_processor()
-        return render_template('airports.html', items=output_data)
+        new_required_params = {}
+        required_parameters = request.form.to_dict()
+        for k, v in required_parameters.items():
+            new_required_params[k] = float(v)
+        if all_airports:
+            nearest_airports = NearestAirportSearcher(new_required_params, all_airports)
+            nearest_airports = nearest_airports.find_nearest_airports()
+            airport_data_process = AirportDataProcessor(nearest_airports, new_required_params)
+            measured_distances = airport_data_process.distance_processor()
+            return render_template('airports.html', items=measured_distances)
 
     elif request.method == 'GET':
         return render_template('index.html')

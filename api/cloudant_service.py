@@ -10,35 +10,27 @@ class CloudantService(object):
         """
         self.db = self.__get_db(**connection_credentials)
 
-    def __get_db(self, **connection_parameteres):
+    def __get_db(self, **connection_parameters):
         try:
-            _client = CouchDB(**connection_parameteres)
+            _client = CouchDB(**connection_parameters)
             return CloudantDatabase(_client, 'airportdb')
         except Exception as e:
             print(e)
 
-    @staticmethod
-    def __get_search_string(**kwargs):
-        return "lon:[{user_lon} TO {range_lon}] AND lat:[{user_lat} TO {range_lat}]".format(**kwargs)
-
-    def get_airport_data(self, airport_details: list, user_details: dict) -> dict:
+    def get_airport_data(self) -> list:
+        """
+        Method will return all airport list in the database
+        :return: list of all airports
+        """
         try:
-            user_lon = user_details.get('user_lon')
-            user_lat = user_details.get('user_lat')
+            all_airport_details = []
+            search_string = "lon:[ -180 TO 180] AND lat:[-90 TO 90]"
+            all_airports = self.db.get_search_result(ddoc_id='view1', index_name='geo', query=search_string)
 
-            all_airport_details = {}
-            for airport_coordinates in airport_details:
-                range_lon = airport_coordinates.get('range_lon')
-                range_lat = airport_coordinates.get('range_lat')
-
-                search_string = self.__get_search_string(range_lon=range_lon, range_lat=range_lat, user_lat=user_lat,
-                                                         user_lon=user_lon)
-                all_ids = self.db.get_search_result(ddoc_id='view1', index_name='geo', query=search_string)
-
-                for location_info in all_ids['rows']:
-                    fields = location_info.get('fields')
-                    if fields['name'] not in all_airport_details.keys():
-                        all_airport_details[fields['name']] = fields
+            for location_info in all_airports['rows']:
+                fields = location_info.get('fields')
+                if fields:
+                    all_airport_details.append(fields)
             return all_airport_details
         except Exception as e:
             print(e)
