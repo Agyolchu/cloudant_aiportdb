@@ -11,7 +11,7 @@
         > python api/app.py
     Please open your browser and go to the link:
         http://yourhost:1989/
-        "yourhost" is the address of your host. E.g. http://127.0.0.1:1989/
+        "yourhost" is the address of your computer. If you run locally please use either localhost or 127.0.0.1 E.g. http://127.0.0.1:1989/
 ###### How to enter parameters:
     Below form will be open as soon as you will enter to application:
 
