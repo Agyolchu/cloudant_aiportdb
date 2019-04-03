@@ -31,7 +31,7 @@ class AirportDataProcessor(object):
         lat2 = float(self.user_details.get('user_lat'))
         lon2 = float(self.user_details.get('user_lon'))
         distance = self._haversine_formula(lon1, lat1, lon2, lat2)
-        return round(distance/1000, 2)
+        return round(distance / 1000, 2)
 
     def distance_processor(self) -> list:
         all_airports = []
