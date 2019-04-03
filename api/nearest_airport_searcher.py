@@ -7,7 +7,7 @@ class NearestAirportSearcher(object):
         self.user_data = user_provided_data
         self.airports = existing_airports
 
-    def process_airport_data(self):
+    def process_airport_data(self) -> dict:
         _airports = {}
         for _airport_data in self.airports:
             longitude = _airport_data.get('lon')
@@ -16,7 +16,7 @@ class NearestAirportSearcher(object):
             _airports[(longitude, latitude)] = name
         return _airports
 
-    def find_nearest_airports(self):
+    def find_nearest_airports(self) -> dict:
         user_coordinates = [self.user_data.get('user_lon'), self.user_data.get('user_lat')]
         radius = self.user_data.get('provided_radius')
         airports_data = self.process_airport_data()

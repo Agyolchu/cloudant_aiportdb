@@ -40,5 +40,5 @@ class AirportDataProcessor(object):
                 _distance = self.__distance_calculator(airport_details)
                 measured_airport_details = {'airport_name': airport_name, 'distance': _distance}
                 all_airports.append(measured_airport_details)
-            return all_airports
-        return {}
+
+        return all_airports
