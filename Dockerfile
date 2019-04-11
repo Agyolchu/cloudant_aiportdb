@@ -2,6 +2,7 @@ FROM python:3.5.2-alpine
 ADD . /code
 WORKDIR /code
 RUN apk update
+RUN apt-get install -y build-essential libssl-dev libffi-dev
 RUN apk add make automake gcc g++ subversion python3-dev
 RUN export CFLAGS=-Qunused-arguments
 RUN export CPPFLAGS=-Qunused-arguments
