@@ -64,7 +64,7 @@ query-string==2018.11.20
 radon==1.2.2
 relativetimebuilder==0.2.0
 request==2018.11.20
-requests==2.19.1
+requests==2.20.0
 requests-oauthlib==1.0.0
 responses==0.9.0
 scipy==1.2.1
