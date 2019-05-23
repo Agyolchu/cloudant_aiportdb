@@ -59,7 +59,7 @@ python-forecastio==1.4.0
 pyttsx==1.1
 pyttsx3==2.7
 pytz==2018.9
-PyYAML==3.13
+PyYAML==5.1
 query-string==2018.11.20
 radon==1.2.2
 relativetimebuilder==0.2.0
