@@ -20,7 +20,7 @@ flake8==2.5.0
 flake8-debugger==1.4.0
 flake8-print==2.0.1
 flake8-todo==0.4
-Flask==0.12.2
+Flask==1.0
 Flask-Login==0.4.1
 Flask-OAuthlib==0.9.5
 Flask-RESTful==0.3.7
