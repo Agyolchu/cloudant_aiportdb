@@ -13,7 +13,7 @@ colorama==0.4.1
 cookies==2.2.1
 CouchDB==1.2
 coverage==4.5.2
-cryptography==2.4.2
+cryptography==3.2
 Cython==0.28.4
 elasticsearch==6.3.0
 flake8==2.5.0
