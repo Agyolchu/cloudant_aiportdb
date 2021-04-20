@@ -45,7 +45,7 @@ pep8==1.7.1
 pep8-naming==0.3.3
 post==2018.11.20
 public==2018.11.20
-py==1.7.0
+py==1.10.0
 pycparser==2.19
 pyflakes==1.0.0
 pymodm==0.4.1
